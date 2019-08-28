@@ -57,31 +57,88 @@ class Problem:
 
                 sample_number += 1
 
+    def _comment_begin(self) -> str:
+        """
+        :returns: 언어의 문법에 맞는 주석 시작.
+        """
+        raise NotImplementedError()
+
+    def _comment_end(self) -> str:
+        """
+        :returns: 언어의 문법에 맞는 주석 끝.
+        """
+        raise NotImplementedError()
+
+    def _make_header(self) -> str:
+        """
+        언어의 문법에 맞는 헤더 주석을 생성한다.
+
+        :returns: 헤더 주석.
+        """
+        number_and_title = '{}: {}'.format(self.number, self.title)
+        url = 'URL: {}'.format(self.url)
+        samples = []
+        for sample_number, sample in enumerate(self.samples, 1):
+            sample_input = 'Input #{}:{}{}'.format(
+                sample_number, os.linesep, sample[0])
+            sample_output = 'Output #{}:{}{}'.format(
+                sample_number, os.linesep, sample[1])
+            samples.append('{}{}{}'.format(
+                sample_input, os.linesep, sample_output))
+
+        return os.linesep.join([
+            self._comment_begin(),
+            number_and_title,
+            url,
+            os.linesep.join(samples),
+            self._comment_end()
+        ])
+
     def write(self) -> None:
         """
         문제를 파일에 쓴다.
         파일 이름은 {문제 번호}.{언어} 이다.
         """
         self._fetch()
+        header = self._make_header()
 
         filename = '{}.{}'.format(self.number, self.language)
-        f = open(filename, mode='w', encoding='utf8')
-        f.close()
+        with open(filename, mode='w', encoding='utf8', newline='') as f:
+            for header_item in header:
+                f.write(header_item)
 
 
 class CProblem(Problem):
     def __init__(self, number: int):
         super(CProblem, self).__init__(number, C)
 
+    def _comment_begin(self) -> str:
+        return '/*'
+
+    def _comment_end(self) -> str:
+        return '*/'
+
 
 class CppProblem(Problem):
     def __init__(self, number: int):
         super(CppProblem, self).__init__(number, CPP)
 
+    def _comment_begin(self) -> str:
+        return '/*'
+
+    def _comment_end(self) -> str:
+        return '*/'
+
 
 class PythonProblem(Problem):
     def __init__(self, number: int):
         super(PythonProblem, self).__init__(number, PYTHON)
+
+    def _comment_begin(self) -> str:
+        return '"""'
+
+    def _comment_end(self) -> str:
+        return '"""'
 
 
 def parse_language(language: str) -> str:
