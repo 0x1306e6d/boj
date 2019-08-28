@@ -9,7 +9,9 @@ setup(
     license="MIT",
     description="깔끔한 Baekjoon Online Judge 코드 관리를 위한 커맨드 라인 명령어",
     install_requires=[
-        'fire'
+        'beautifulsoup4',
+        'fire',
+        'requests'
     ],
     packages=[
         'boj'
