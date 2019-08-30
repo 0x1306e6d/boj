@@ -53,6 +53,13 @@ class Problem:
             else:
                 sample_input = sample_input.string
                 sample_output = sample_output.string
+
+                if sample_input is not None:
+                    sample_input = sample_input.rstrip()
+
+                if sample_output is not None:
+                    sample_output = sample_output.rstrip()
+
                 self.samples.append((sample_input, sample_output))
 
                 sample_number += 1
