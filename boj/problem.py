@@ -72,46 +72,16 @@ class Problem:
         """
         raise NotImplementedError()
 
-    def _make_header(self) -> str:
-        """
-        언어의 문법에 맞는 헤더 주석을 생성한다.
-
-        :returns: 헤더 주석.
-        """
-        file_header = 'File: {}.{}'.format(self.number, self.language)
-        title_header = 'Title: {}'.format(self.title)
-        url = 'URL: {}'.format(self.url)
-        sample_headers = []
-        for sample in self.samples:
-            sample_input_header = 'Input #{}:{}{}'.format(sample.number,
-                                                          os.linesep,
-                                                          sample.input)
-            sample_output_header = 'Output #{}:{}{}'.format(sample.number,
-                                                            os.linesep,
-                                                            sample.output)
-
-            sample_headers.append('{}{}{}'.format(sample_input_header,
-                                                  os.linesep,
-                                                  sample_output_header))
-        created_at_header = 'Created At: {}'.format(datetime.datetime.now())
-
-        return os.linesep.join([
-            self._comment_begin(),
-            file_header,
-            title_header,
-            url,
-            os.linesep.join(sample_headers),
-            created_at_header,
-            self._comment_end()
-        ])
-
     def write(self) -> None:
         """
         문제를 파일에 쓴다.
         파일 이름은 {문제 번호}.{언어} 이다.
         """
         self._fetch()
-        header = self._make_header()
+
+        # TODO(@ghkim3221): 순환 참조. 파일에 쓰는 부분을 외부 모듈로 옮겨야 함.
+        from boj.header import make_header
+        header = make_header(self)
 
         filename = '{}.{}'.format(self.number, self.language)
         with open(filename, mode='w', encoding='utf8', newline='') as f:
