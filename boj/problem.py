@@ -6,6 +6,7 @@ import requests
 
 from boj import selector
 from boj.language import C, CPP, PYTHON
+from boj.sample import parse_sample
 
 
 class Problem:
@@ -45,22 +46,16 @@ class Problem:
             sample_input_selector = selector.sample_input(sample_number)
             sample_output_selector = selector.sample_output(sample_number)
 
-            sample_input = soup.select_one(sample_input_selector)
-            sample_output = soup.select_one(sample_output_selector)
+            sample_input_tag = soup.select_one(sample_input_selector)
+            sample_output_tag = soup.select_one(sample_output_selector)
 
-            if (sample_input is None) and(sample_output is None):
+            if (sample_input_tag is None) and(sample_output_tag is None):
                 break
             else:
-                sample_input = sample_input.string
-                sample_output = sample_output.string
-
-                if sample_input is not None:
-                    sample_input = sample_input.rstrip()
-
-                if sample_output is not None:
-                    sample_output = sample_output.rstrip()
-
-                self.samples.append((sample_input, sample_output))
+                sample = parse_sample(sample_number,
+                                      sample_input_tag,
+                                      sample_output_tag)
+                self.samples.append(sample)
 
                 sample_number += 1
 
@@ -84,20 +79,24 @@ class Problem:
         """
         number_and_title = '{}: {}'.format(self.number, self.title)
         url = 'URL: {}'.format(self.url)
-        samples = []
-        for sample_number, sample in enumerate(self.samples, 1):
-            sample_input = 'Input #{}:{}{}'.format(
-                sample_number, os.linesep, sample[0])
-            sample_output = 'Output #{}:{}{}'.format(
-                sample_number, os.linesep, sample[1])
-            samples.append('{}{}{}'.format(
-                sample_input, os.linesep, sample_output))
+        sample_headers = []
+        for sample in self.samples:
+            sample_input_header = 'Input #{}:{}{}'.format(sample.number,
+                                                          os.linesep,
+                                                          sample.input)
+            sample_output_header = 'Output #{}:{}{}'.format(sample.number,
+                                                            os.linesep,
+                                                            sample.output)
+
+            sample_headers.append('{}{}{}'.format(sample_input_header,
+                                                  os.linesep,
+                                                  sample_output_header))
 
         return os.linesep.join([
             self._comment_begin(),
             number_and_title,
             url,
-            os.linesep.join(samples),
+            os.linesep.join(sample_headers),
             self._comment_end()
         ])
 
