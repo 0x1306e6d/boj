@@ -78,7 +78,7 @@ class Problem:
         :returns: 헤더 주석.
         """
         file_header = 'File: {}.{}'.format(self.number, self.language)
-        number_and_title = '{}: {}'.format(self.number, self.title)
+        title_header = 'Title: {}'.format(self.title)
         url = 'URL: {}'.format(self.url)
         sample_headers = []
         for sample in self.samples:
@@ -96,7 +96,7 @@ class Problem:
         return os.linesep.join([
             self._comment_begin(),
             file_header,
-            number_and_title,
+            title_header,
             url,
             os.linesep.join(sample_headers),
             self._comment_end()
