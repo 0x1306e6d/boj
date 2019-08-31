@@ -1,3 +1,4 @@
+import datetime
 import os
 import sys
 
@@ -92,6 +93,7 @@ class Problem:
             sample_headers.append('{}{}{}'.format(sample_input_header,
                                                   os.linesep,
                                                   sample_output_header))
+        created_at_header = 'Created At: {}'.format(datetime.datetime.now())
 
         return os.linesep.join([
             self._comment_begin(),
@@ -99,6 +101,7 @@ class Problem:
             title_header,
             url,
             os.linesep.join(sample_headers),
+            created_at_header,
             self._comment_end()
         ])
 
