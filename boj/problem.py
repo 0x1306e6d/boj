@@ -4,12 +4,23 @@ import sys
 
 from typing import List
 
-import bs4
 import requests
+
+from bs4 import BeautifulSoup
+from bs4.element import Tag
 
 from boj import selector
 from boj.language import C, CPP, PYTHON
-from boj.sample import Sample, parse_sample
+
+
+class Sample:
+    def __init__(self,
+                 sample_number: int,
+                 sample_input: str,
+                 sample_output: str):
+        self.number = sample_number
+        self.input = sample_input
+        self.output = sample_output
 
 
 class Problem:
@@ -147,7 +158,7 @@ def _make_url(number: int) -> str:
     return 'https://www.acmicpc.net/problem/{}'.format(number)
 
 
-def _parse_title(soup: bs4.BeautifulSoup) -> str:
+def _parse_title(soup: BeautifulSoup) -> str:
     title_tag = soup.select_one(selector.title())
     if title_tag is None:
         return None
@@ -160,7 +171,7 @@ def _parse_title(soup: bs4.BeautifulSoup) -> str:
     return title
 
 
-def _parse_time_limit(soup: bs4.BeautifulSoup) -> str:
+def _parse_time_limit(soup: BeautifulSoup) -> str:
     time_limit_tag = soup.select_one(selector.time_limit())
     if time_limit_tag is None:
         return None
@@ -173,7 +184,7 @@ def _parse_time_limit(soup: bs4.BeautifulSoup) -> str:
     return time_limit
 
 
-def _parse_memory_limit(soup: bs4.BeautifulSoup) -> str:
+def _parse_memory_limit(soup: BeautifulSoup) -> str:
     memory_limit_tag = soup.select_one(selector.memory_limit())
     if memory_limit_tag is None:
         return None
@@ -186,7 +197,27 @@ def _parse_memory_limit(soup: bs4.BeautifulSoup) -> str:
     return memory_limit
 
 
-def _parse_samples(soup: bs4.BeautifulSoup) -> List[Sample]:
+def _parse_sample_tag(sample_tag: Tag) -> str:
+    if sample_tag is None:
+        return None
+
+    raw_sample = sample_tag.string
+    if raw_sample is None:
+        return None
+
+    sample = raw_sample.rstrip()
+    return sample
+
+
+def _parse_sample(number: int,
+                  sample_input_tag: Tag,
+                  sample_output_tag: Tag) -> Sample:
+    sample_input = _parse_sample_tag(sample_input_tag)
+    sample_output = _parse_sample_tag(sample_output_tag)
+    return Sample(number, sample_input, sample_output)
+
+
+def _parse_samples(soup: BeautifulSoup) -> List[Sample]:
     samples = []
 
     number = 1
@@ -200,7 +231,7 @@ def _parse_samples(soup: bs4.BeautifulSoup) -> List[Sample]:
         if (sample_input_tag is None) and (sample_output_tag is None):
             break
 
-        sample = parse_sample(number, sample_input_tag, sample_output_tag)
+        sample = _parse_sample(number, sample_input_tag, sample_output_tag)
         samples.append(sample)
 
         number += 1
@@ -215,7 +246,7 @@ def _fetch_problem(number: int, language: str) -> Problem:
         raise Exception()
 
     html = response.text
-    soup = bs4.BeautifulSoup(html, 'html.parser')
+    soup = BeautifulSoup(html, 'html.parser')
 
     title = _parse_title(soup)
     time_limit = _parse_time_limit(soup)

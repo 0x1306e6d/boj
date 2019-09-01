@@ -1,8 +1,7 @@
 import datetime
 import os
 
-from boj.problem import Problem
-from boj.sample import Sample
+from boj.problem import Problem, Sample
 
 
 def _make_file_header(problem: Problem) -> str:
