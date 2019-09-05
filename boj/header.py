@@ -19,10 +19,10 @@ def _make_url_header(problem: Problem) -> str:
 def _make_sample_header(sample: Sample) -> str:
     input_header = 'Input #{}:{}{}'.format(sample.number,
                                            os.linesep,
-                                           sample.input)
+                                           os.linesep.join(sample.input))
     output_header = 'Output #{}:{}{}'.format(sample.number,
                                              os.linesep,
-                                             sample.output)
+                                             os.linesep.join(sample.output))
 
     return '{}{}{}'.format(input_header, os.linesep, output_header)
 

@@ -1,5 +1,6 @@
 import datetime
 import os
+import re
 import sys
 
 from typing import List
@@ -16,8 +17,8 @@ from boj.language import C, CPP, PYTHON
 class Sample:
     def __init__(self,
                  sample_number: int,
-                 sample_input: str,
-                 sample_output: str):
+                 sample_input: List[str],
+                 sample_output: List[str]):
         self.number = sample_number
         self.input = sample_input
         self.output = sample_output
@@ -197,16 +198,17 @@ def _parse_memory_limit(soup: BeautifulSoup) -> str:
     return memory_limit
 
 
-def _parse_sample_tag(sample_tag: Tag) -> str:
+def _parse_sample_tag(sample_tag: Tag) -> List[str]:
     if sample_tag is None:
         return None
 
-    raw_sample = sample_tag.string
-    if raw_sample is None:
+    raw = sample_tag.string
+    if raw is None:
         return None
 
-    sample = raw_sample.rstrip()
-    return sample
+    linesep_splitted = re.split('{\r|\n|\r\n|\n\r}', raw)
+    empty_filtered = list(filter(lambda s: s != '', linesep_splitted))
+    return empty_filtered
 
 
 def _parse_sample(number: int,
