@@ -2,6 +2,7 @@ import datetime
 import os
 import re
 import sys
+import time
 
 from typing import List
 
@@ -242,10 +243,21 @@ def _parse_samples(soup: BeautifulSoup) -> List[Sample]:
 
 
 def _fetch_problem(number: int, language: str) -> Problem:
+    fetch_start = time.time()
+    print("문제 {} 의 데이터를 다운로드 하는 중...".format(number))
+
     url = _make_url(number)
     response = requests.get(url)
     if not response.ok:
         raise Exception()
+
+    fetch_end = time.time()
+    fetch_duration = (fetch_end - fetch_start)
+    print(
+        "문제 {} 의 데이터를 다운로드 하였습니다. ({:.2f} 초 사용됨, {})".format(
+            number, fetch_duration, url
+        )
+    )
 
     html = response.text
     soup = BeautifulSoup(html, 'html.parser')
