@@ -26,8 +26,8 @@ def new(number: str, language: str) -> None:
     problem = create_problem(number, language)
     problem.write()
     print(
-        "{} 언어로 문제 {} 를(을) 생성하였습니다.".format(
-            problem.language, problem.number
+        "{} 언어로 문제 {} ({}) 를(을) 생성하였습니다.".format(
+            problem.language, problem.number, problem.title,
         )
     )
 
