@@ -10,6 +10,7 @@ setup(
     description="깔끔한 Baekjoon Online Judge 코드 관리를 위한 커맨드 라인 명령어",
     install_requires=[
         'beautifulsoup4',
+        'halo',
         'fire',
         'requests'
     ],
