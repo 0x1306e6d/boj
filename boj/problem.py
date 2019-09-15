@@ -10,6 +10,7 @@ import requests
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
+from halo import Halo
 
 from boj import selector
 from boj.language import C, CPP, PYTHON
@@ -243,41 +244,47 @@ def _parse_samples(soup: BeautifulSoup) -> List[Sample]:
 
 
 def _fetch_problem(number: int, language: str) -> Problem:
-    fetch_start = time.time()
-    print("문제 {} 의 데이터를 다운로드 하는 중...".format(number))
+    with Halo(text="문제 {} 의 데이터를 다운로드 하는 중...".format(number),
+              spinner='dots') as halo:
+        fetch_start = time.time()
 
-    url = _make_url(number)
-    response = requests.get(url)
-    if not response.ok:
-        raise Exception()
+        url = _make_url(number)
+        response = requests.get(url)
+        if not response.ok:
+            raise Exception()
 
-    fetch_end = time.time()
-    fetch_duration = (fetch_end - fetch_start)
-    print(
-        "문제 {} 의 데이터를 다운로드 하였습니다. ({:.2f} 초 사용됨, {})".format(
-            number, fetch_duration, url
+        fetch_end = time.time()
+        fetch_duration = (fetch_end - fetch_start)
+        halo.succeed(
+            "문제 {} 의 데이터를 다운로드 하였습니다. ({:.2f} 초 사용됨, {})".format(
+                number, fetch_duration, url
+            )
         )
-    )
 
-    html = response.text
-    soup = BeautifulSoup(html, 'html.parser')
+        html = response.text
+        soup = BeautifulSoup(html, 'html.parser')
 
-    title = _parse_title(soup)
-    time_limit = _parse_time_limit(soup)
-    memory_limit = _parse_memory_limit(soup)
-    samples = _parse_samples(soup)
+        title = _parse_title(soup)
+        time_limit = _parse_time_limit(soup)
+        memory_limit = _parse_memory_limit(soup)
+        samples = _parse_samples(soup)
 
-    problem_class = None
-    if language == C:
-        problem_class = CProblem
-    elif language == CPP:
-        problem_class = CppProblem
-    elif language == PYTHON:
-        problem_class = PythonProblem
+        problem_class = None
+        if language == C:
+            problem_class = CProblem
+        elif language == CPP:
+            problem_class = CppProblem
+        elif language == PYTHON:
+            problem_class = PythonProblem
 
-    if problem_class is None:
-        raise Exception()
-    return problem_class(number, title, url, time_limit, memory_limit, samples)
+        if problem_class is None:
+            raise Exception()
+        return problem_class(number,
+                             title,
+                             url,
+                             time_limit,
+                             memory_limit,
+                             samples)
 
 
 def create_problem(number: int, raw_language: str) -> Problem:
