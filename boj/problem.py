@@ -60,14 +60,24 @@ class Problem:
         문제를 파일에 쓴다.
         파일 이름은 {문제 번호}.{언어} 이다.
         """
-        # TODO(@ghkim3221): 순환 참조. 파일에 쓰는 부분을 외부 모듈로 옮겨야 함.
-        from boj.header import make_header
-        header = make_header(self)
-
         filename = '{}.{}'.format(self.number, self.language)
-        with open(filename, mode='w', encoding='utf8', newline='') as f:
-            for header_item in header:
-                f.write(header_item)
+        text = "{} 언어로 문제 {} ({}) 를(을) 파일 {} 에 쓰는 중...".format(
+            self.language, self.number, self.title, filename
+        )
+        with Halo(text=text, spinner='dots') as halo:
+            # TODO(@ghkim3221): 순환 참조. 파일에 쓰는 부분을 외부 모듈로 옮겨야 함.
+            from boj.header import make_header
+            header = make_header(self)
+
+            with open(filename, mode='w', encoding='utf8', newline='') as f:
+                for header_item in header:
+                    f.write(header_item)
+
+            halo.succeed(
+                "{} 언어로 문제 {} ({}) 를(을) 파일 {} 에 생성하였습니다.".format(
+                    self.language, self.number, self.title, filename
+                )
+            )
 
 
 class CProblem(Problem):
