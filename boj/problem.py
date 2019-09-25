@@ -261,6 +261,7 @@ def _fetch_problem(number: int, language: str) -> Problem:
         url = _make_url(number)
         response = requests.get(url)
         if not response.ok:
+            halo.fail("문제 {} 의 데이터를 다운로드할 수 없습니다.".format(number))
             raise Exception()
 
         fetch_end = time.time()
