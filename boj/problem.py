@@ -55,6 +55,12 @@ class Problem:
         """
         raise NotImplementedError()
 
+    def _whitespace(self) -> str:
+        """
+        :returns: 언어의 화이트스페이스.
+        """
+        raise NotImplementedError()
+
     def write(self) -> None:
         """
         문제를 파일에 쓴다.
@@ -102,6 +108,9 @@ class CProblem(Problem):
     def _comment_end(self) -> str:
         return '*/'
 
+    def _whitespace(self) -> str:
+        return '\t'
+
 
 class CppProblem(Problem):
     def __init__(self,
@@ -125,6 +134,9 @@ class CppProblem(Problem):
     def _comment_end(self) -> str:
         return '*/'
 
+    def _whitespace(self) -> str:
+        return '\t'
+
 
 class PythonProblem(Problem):
     def __init__(self,
@@ -147,6 +159,9 @@ class PythonProblem(Problem):
 
     def _comment_end(self) -> str:
         return '"""'
+
+    def _whitespace(self) -> str:
+        return '    '
 
 
 def parse_language(language: str) -> str:
