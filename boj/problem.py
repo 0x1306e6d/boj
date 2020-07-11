@@ -227,11 +227,11 @@ def _parse_memory_limit(soup: BeautifulSoup) -> str:
 
 def _parse_sample_tag(sample_tag: Tag) -> List[str]:
     if sample_tag is None:
-        return None
+        return []
 
     raw = sample_tag.string
     if raw is None:
-        return None
+        return []
 
     linesep_splitted = re.split('{\r|\n|\r\n|\n\r}', raw)
     empty_filtered = list(filter(lambda s: s != '', linesep_splitted))
