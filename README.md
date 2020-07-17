@@ -2,6 +2,27 @@
 
 깔끔한 Baekjoon Online Judge 코드 관리를 위한 커맨드 라인 명령어
 
+## Getting Started
+
+### Installation
+
+아직 설치를 제공하지 않습니다. 이 프로젝트를 클론하신 후 `python setup.py install` 명령으로 설치해주세요.
+
+### Usage
+
+ - `boj new {문제번호} {언어}`
+   - `{문제번호}`에 해당하는 문제의 정보를 읽어 문제 파일을 생성합니다.
+   - `{언어}`는 C, C++, Python을 지원합니다.
+     - C: `c`
+     - C++: `c++`, `cpp`
+     - Python: `python`, `py`
+   - Examples:
+     ```
+     $ boj new 1000 cpp
+     ✔ 문제 1000 의 데이터를 다운로드 하였습니다. (0.39 초 사용됨, https://www.acmicpc.net/problem/1000)
+     ✔ cpp 언어로 문제 1000 (A+B) 를(을) 파일 1000.cpp 에 생성하였습니다.
+     ```
+
 ## License
 
 ```
