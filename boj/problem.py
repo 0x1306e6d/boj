@@ -4,6 +4,7 @@ import re
 import sys
 import time
 
+from pathlib import Path
 from typing import List
 
 import requests
@@ -74,6 +75,11 @@ class Problem:
             # TODO(@ghkim3221): 순환 참조. 파일에 쓰는 부분을 외부 모듈로 옮겨야 함.
             from boj.header import make_header
             header = make_header(self)
+
+            path_to_write = Path(filename)
+            if path_to_write.exists():
+                halo.fail("이미 파일 {} 이 존재합니다.".format(filename))
+                return
 
             with open(filename, mode='w', encoding='utf8', newline='') as f:
                 for header_item in header:
