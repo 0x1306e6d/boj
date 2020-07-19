@@ -4,6 +4,9 @@ import os
 from boj.problem import Problem, Sample
 
 
+__DATETIME_FORMAT__ = "%Y-%m-%d %H:%M:%S"
+
+
 def _make_file_header(problem: Problem) -> str:
     return '{}File: {}.{}'.format(problem._whitespace(),
                                   problem.number,
@@ -54,8 +57,9 @@ def _make_samples_header(problem: Problem) -> str:
 
 
 def _make_created_at_header(problem: Problem) -> str:
+    now = datetime.datetime.now()
     return '{}Created At: {}'.format(problem._whitespace(),
-                                     datetime.datetime.now())
+                                     now.strftime(__DATETIME_FORMAT__))
 
 
 def make_header(problem: Problem) -> str:
