@@ -24,7 +24,8 @@ def new(number: str, language: str) -> None:
         sys.exit(1)
 
     problem = create_problem(number, language)
-    problem.write()
+    if problem:
+        problem.write()
 
 
 def main() -> None:
