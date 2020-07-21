@@ -14,7 +14,7 @@ from bs4.element import Tag
 from halo import Halo
 
 from boj import selector
-from boj.language import C, CPP, PYTHON
+from boj.language import C, CPP, JAVA, PYTHON
 
 
 class Sample:
@@ -144,6 +144,32 @@ class CppProblem(Problem):
         return '\t'
 
 
+class JavaProblem(Problem):
+    def __init__(self,
+                 number: int,
+                 title: str,
+                 url: str,
+                 time_limit: str,
+                 memory_limit: str,
+                 samples: List[Sample]):
+        super(JavaProblem, self).__init__(JAVA,
+                                          number,
+                                          title,
+                                          url,
+                                          time_limit,
+                                          memory_limit,
+                                          samples)
+
+    def _comment_begin(self) -> str:
+        return '/*'
+
+    def _comment_end(self) -> str:
+        return '*/'
+
+    def _whitespace(self) -> str:
+        return '\t'
+
+
 class PythonProblem(Problem):
     def __init__(self,
                  number: int,
@@ -186,6 +212,8 @@ def parse_language(language: str) -> str:
         return CPP
     elif (language == 'python') or (language == 'py'):
         return PYTHON
+    elif language == 'java':
+        return JAVA
 
 
 def _make_url(number: int) -> str:
@@ -312,6 +340,8 @@ def _fetch_problem(number: int, language: str) -> Problem:
             problem_class = CppProblem
         elif language == PYTHON:
             problem_class = PythonProblem
+        elif language == JAVA:
+            problem_class = JavaProblem
 
         if problem_class is None:
             raise Exception()
