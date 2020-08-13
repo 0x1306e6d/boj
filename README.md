@@ -16,6 +16,7 @@
      - C: `c`
      - C++: `c++`, `cpp`
      - Python: `python`, `py`
+     - Java: `java`
    - Examples:
      ```
      $ boj new 1000 cpp
